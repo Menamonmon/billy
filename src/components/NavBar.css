@@ -1,0 +1,15 @@
+.navbar .title {
+  justify-self: flex-start;
+}
+
+.nav-list {
+  margin-left: auto;
+}
+
+.navbar .menu-btn {
+  margin-right: 20px;
+}
+
+.nav-link {
+  margin: 0 10px;
+}

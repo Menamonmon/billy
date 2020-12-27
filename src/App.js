@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import NavBar from "./components/NavBar";
+import Routes from "./components/Routes";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { LoginPage, LogoutPage, SignupPage } from "./pages";
+import { AuthProvider } from "./contexts/AuthContext";
 
-function App() {
+import "./App.css";
+
+const appRoutes = [
+  {
+    path: "/",
+    isProtected: false,
+    component: () => {
+      return <h1>Welcome To Billy</h1>
+    }
+  },
+  {
+    path: "/login",
+    isProtected: false,
+    component: LoginPage,
+  },
+  {
+    path: "/signup",
+    isProtected: false,
+    component: SignupPage,
+  },
+  {
+    path: "/logout",
+    isProtected: true,
+    component: LogoutPage,
+  },
+];
+
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AuthProvider>
+        <Router>
+          <NavBar />
+          <Switch>
+            <Routes links={appRoutes} />
+          </Switch>
+        </Router>
+      </AuthProvider>
     </div>
   );
 }
-
-export default App;
