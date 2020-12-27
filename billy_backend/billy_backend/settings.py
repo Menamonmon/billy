@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # REST Framework apps
     "rest_framework",
-    "rest_framework.authtoken",
+    "knox",
     # Project apps
     "users.apps.UsersConfig",
     "bills.apps.BillsConfig",
@@ -106,6 +106,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "users.Account"
+
+
+# REST Framework settings
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated"
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),  # added
+}
+
+# REST Knox Authentication Settings
+REST_KNOX = {
+    "USER_SERIALIZER": "users.api.serializers.AccountSerializer",
+}
 
 
 # Internationalization
