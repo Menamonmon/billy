@@ -15,8 +15,8 @@ export const AuthProvider = ({ children }) => {
   let [auth, setAuth] = useState(initialAuth);
 
   useEffect(() => {
-    let isAuthenticated = Boolean(localStorage.getItem("isAuthenticated"));
-    isAuthenticated = isAuthenticated === true ? true : false;
+    const isAuthenticatedLocalStorage = localStorage.getItem("isAuthenticated");
+    let isAuthenticated = isAuthenticatedLocalStorage === "true" ? true : false;
     setAuth({ isAuthenticated });
   }, []);
 
@@ -24,35 +24,44 @@ export const AuthProvider = ({ children }) => {
     function loginTimeout(date) {
       const now = new Date();
       const diff = date - now;
-      setTimeout(() => {
+      return setTimeout(() => {
+        console.log("LOGOUT TIMEOUT CALLED");
         logout();
-      }, diff);
+      }, 10000);
     }
     let response = {};
+    let data = null;
+    let token = null;
+    let expiry = null;
     try {
       response = await api.post("/api/auth/login/", userData);
+      let data = await response.data;
+      token = await data.token;
+      expiry = await data.expiry;
     } catch (error) {
-      console.log(error);
-      return;
+      return error;
     }
-    let data = await response.data;
-    let { token, expiry } = await data.token;
-    addAuthTokenToConfig(token);
+    addAuthTokenToConfig(api, token);
     setAuth((p) => {
       p = JSON.parse(JSON.stringify(p));
       p.isAuthenticated = true;
       localStorage.setItem("isAuthenticated", p.isAuthenticated);
       return p;
     });
-    loginTimeout(expiry);
+    loginTimeout(new Date(expiry));
     return data;
   }
 
   async function logout() {
     localStorage.setItem("isAuthenticated", false);
     setAuth(initialAuth);
-    let response = await api.post("/api/auth/logoutall/");
-    removeAuthTokenFromConfig();
+    removeAuthTokenFromConfig(api);
+    let response = null;
+    try {
+      response = await api.post("/api/auth/logoutall/");
+    } catch (error) {
+      return error;
+    }
     return response;
   }
 
@@ -60,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post("/api/auth/register/", userData);
     } catch (error) {
-      console.log(error);
+      return error;
     }
     const loginUserData = {
       username: userData.username,
@@ -70,9 +79,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider
-      value={{ ...auth, login, logout, signup }}
-    >
+    <AuthContext.Provider value={{ ...auth, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

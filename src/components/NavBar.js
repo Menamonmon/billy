@@ -11,6 +11,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";
 
 import "./NavBar.css";
+import { useAuth } from "../contexts/AuthContext";
 
 export function NavLink({ path, content }) {
   return (
@@ -22,20 +23,28 @@ export function NavLink({ path, content }) {
   );
 }
 
-export function AuthenticatedNavLinks() {
+export function AuthenticatedNavLinks({ links }) {
   return (
     <ul className="nav-list">
-      <Link to="/logout" styles={{ textDecoration: "none" }}>
-        <Button variant="contained" color="secondary">
-          Logout
-        </Button>
-      </Link>
+      {links.map(({ path, content }) => (
+        <NavLink path={path} content={content} key={path + content} />
+      ))}
     </ul>
   );
 }
 
-export function UnauthenticatedNavLinks() {
-  const links = [
+export function UnauthenticatedNavLinks({ links }) {
+  return (
+    <ul className="nav-list">
+      {links.map(({ path, content }) => (
+        <NavLink path={path} content={content} key={path + content} />
+      ))}
+    </ul>
+  );
+}
+
+export default function NavBar() {
+  const unauthenticatedLinks = [
     {
       path: "/login",
       content: "Log In",
@@ -44,21 +53,16 @@ export function UnauthenticatedNavLinks() {
       path: "/signup",
       content: "Sign Up",
     },
-    // {
-    //   path: "/login",
-    //   content: "Log In",
-    // },
   ];
-  return (
-    <ul className="nav-list">
-      {links.map(({ path, content }) => (
-        <NavLink path={path} content={content} />
-      ))}
-    </ul>
-  );
-}
 
-export default function NavBar() {
+  const authenticatedLinks = [
+    {
+      path: "/logout",
+      content: "Log Out",
+    },
+  ];
+
+  const { isAuthenticated } = useAuth();
   return (
     <nav className="navbar">
       <AppBar position="static">
@@ -71,7 +75,11 @@ export default function NavBar() {
               Billy
             </Link>
           </Typography>
-          <UnauthenticatedNavLinks />
+          {isAuthenticated ? (
+            <AuthenticatedNavLinks links={authenticatedLinks} />
+          ) : (
+            <UnauthenticatedNavLinks links={unauthenticatedLinks} />
+          )}
         </Toolbar>
       </AppBar>
     </nav>

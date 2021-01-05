@@ -10,10 +10,11 @@ import "./App.css";
 const appRoutes = [
   {
     path: "/",
+    noProtection: true,
     isProtected: false,
     component: () => {
-      return <h1>Welcome To Billy</h1>
-    }
+      return <h1>Welcome To Billy</h1>;
+    },
   },
   {
     path: "/login",
@@ -27,7 +28,8 @@ const appRoutes = [
   },
   {
     path: "/logout",
-    isProtected: true,
+    noProtection: true,
+    isProtected: false,
     component: LogoutPage,
   },
 ];

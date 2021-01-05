@@ -40,12 +40,14 @@ INSTALLED_APPS = [
     # REST Framework apps
     "rest_framework",
     "knox",
+    "corsheaders",
     # Project apps
     "users.apps.UsersConfig",
     "bills.apps.BillsConfig",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -110,9 +112,7 @@ AUTH_USER_MODEL = "users.Account"
 
 # REST Framework settings
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated"
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),  # added
 }
 
@@ -121,6 +121,18 @@ REST_KNOX = {
     "USER_SERIALIZER": "users.api.serializers.AccountSerializer",
 }
 
+# CORS Settings
+ALLOWED_HOSTS = ["http://localhost:3000", "http://localhost:8000", "localhost"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+]
+
+CORS_ORIGIN_WHITELIST = (
+    "http://192.168.56.1:3000",
+    "http://localhost:8000",
+    "http://localhost:3000",
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

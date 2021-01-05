@@ -1,9 +1,10 @@
 import axios from "axios";
 
-export function addAuthTokenToConfig(token) {
-  axios.defaults.headers.common["Authorization"] = `Token ${token}`;
+export function addAuthTokenToConfig(api, token) {
+  console.log("TOKEN HEADER ADDED");
+  api.defaults.headers.common["Authorization"] = `Token ${token}`;
 }
 
-export function removeAuthTokenFromConfig() {
-  axios.defaults.headers.common["Authorization"] = null;
+export function removeAuthTokenFromConfig(api) {
+  api.defaults.headers.common["Authorization"] = null;
 }
