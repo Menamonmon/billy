@@ -5,12 +5,13 @@ import { useAuth } from "../contexts/AuthContext";
 
 const initialFormData = {
   username: "",
-  passowrd: "",
-  confirm_passowrd: ""
-}
+  email: "",
+  password: "",
+  confirm_password: "",
+};
 
 export default function SignupPage() {
-  const { login } = useAuth();
+  const { signup } = useAuth();
 
   const [formData, setFormData] = useState(initialFormData);
   const handleChange = (e) => {
@@ -22,7 +23,7 @@ export default function SignupPage() {
   };
 
   const submitForm = (e) => {
-    login(formData).then((res) => {
+    signup(formData).then((res) => {
       console.log(res);
     });
     e.preventDefault();
@@ -35,24 +36,42 @@ export default function SignupPage() {
         style={{ margin: "50px auto", width: "100%" }}
       >
         <Typography variant="h2" color="secondary" align="left">
-          Log In to Billy
+          Sign up for Billy
         </Typography>
         <FormField
           value={formData.username}
           onChange={handleChange}
           label="Username"
           type="text"
+          name="username"
           key="Username"
+        />
+        <FormField
+          value={formData.email}
+          onChange={handleChange}
+          label="Email"
+          type="text"
+          name="email"
+          key="Email"
         />
         <FormField
           value={formData.password}
           onChange={handleChange}
           type="password"
           label="Password"
-          key="Password "
+          name="password"
+          key="Password"
+        />
+        <FormField
+          value={formData.confirm_password}
+          onChange={handleChange}
+          type="password"
+          label="Confirm_Password"
+          name="confirm_password"
+          key="Confirm_Password"
         />
         <Button variant="contained" color="primary" onClick={submitForm}>
-          Log In
+          Sign Up
         </Button>
       </FormControl>
     </Container>
