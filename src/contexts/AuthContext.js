@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       return setTimeout(() => {
         console.log("LOGOUT TIMEOUT CALLED");
         logout();
-      }, 10000);
+      }, diff);
     }
     let response = {};
     let data = null;
