@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import FormField from "../components/FormField";
-import {
-  FormControl,
-  Container,
-  Button,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-} from "@material-ui/core";
+import { FormControl, Container, Button, Typography } from "@material-ui/core";
 import { useAuth } from "../contexts/AuthContext";
 import FormErrors from "../components/FormErrors";
+import useForm from "../hooks/useForm";
+import useError from "../hooks/useError";
 
 const initialFormData = {
   username: "",
@@ -20,29 +14,13 @@ const initialFormData = {
 export default function LoginPage() {
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [errors, setErrors] = useState([]);
-  const handleChange = (e) => {
-    setFormData((p) => {
-      p = { ...p };
-      p[e.target.name] = e.target.value;
-      return p;
-    });
-  };
-
-  const catchMissingFields = (formData, setErrors) => {
-    for (const [key, value] of Object.entries(formData)) {
-      if (value.trim() === "") {
-        setErrors((p) => [...p, `${key} is Missing`]);
-      }
-    }
-  };
+  const [formData, setFormData, handleChange] = useForm(initialFormData);
+  const [errors, setErrors, handleMissingField] = useError([]);
 
   const submitForm = (e) => {
     login(formData).catch((error) => {
-      catchMissingFields(formData, setErrors);
       if (errors.length === 0) {
-        setErrors(["Invalid username and/or password."]);
+        setErrors((p) => [...p, "Invalid Username and/or Password"]);
       }
       console.log(error);
     });
@@ -62,14 +40,16 @@ export default function LoginPage() {
         <FormField
           value={formData.username}
           onChange={handleChange}
-          label="Username"
+          onBlur={handleMissingField}
           type="text"
+          label="Username"
           name="username"
           key="Username"
         />
         <FormField
           value={formData.password}
           onChange={handleChange}
+          onBlur={handleMissingField}
           type="password"
           label="Password"
           name="password"
