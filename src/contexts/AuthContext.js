@@ -21,14 +21,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   async function login(userData) {
+    // A timeout funnction that will get triggered when the token expires
     function loginTimeout(date) {
       const now = new Date();
       const diff = date - now;
       return setTimeout(() => {
-        console.log("LOGOUT TIMEOUT CALLED");
         logout();
       }, diff);
     }
+
+    // catching the response data
     let response = {};
     let data = null;
     let token = null;
@@ -39,8 +41,10 @@ export const AuthProvider = ({ children }) => {
       token = await data.token;
       expiry = await data.expiry;
     } catch (error) {
-      return error;
+      throw error;
     }
+
+    // updating the token and the authentitcation
     addAuthTokenToConfig(api, token);
     setAuth((p) => {
       p = JSON.parse(JSON.stringify(p));
@@ -48,6 +52,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("isAuthenticated", p.isAuthenticated);
       return p;
     });
+
+    // triggering the login timeout function 
     loginTimeout(new Date(expiry));
     return data;
   }
@@ -91,3 +97,4 @@ export function useAuth() {
 
   return context;
 }
+
