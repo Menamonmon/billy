@@ -55,13 +55,14 @@ export const AuthProvider = ({ children }) => {
   async function logout() {
     localStorage.setItem("isAuthenticated", false);
     setAuth(initialAuth);
-    removeAuthTokenFromConfig(api);
     let response = null;
     try {
       response = await api.post("/api/auth/logoutall/");
     } catch (error) {
+      removeAuthTokenFromConfig(api);
       return error;
     }
+    removeAuthTokenFromConfig(api);
     return response;
   }
 
