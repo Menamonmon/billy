@@ -6,7 +6,7 @@ export default function FormErrors({ contentArray }) {
   return (
     <Box>
       {contentArray.map((content) => (
-        <Alert severity="error">
+        <Alert severity="error" key={content}>
           <AlertTitle>{content}</AlertTitle>
         </Alert>
       ))}
