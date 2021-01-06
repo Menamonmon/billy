@@ -39,14 +39,13 @@ export default function LoginPage() {
   };
 
   const submitForm = (e) => {
-    login(formData)
-      .catch((error) => {
-        catchMissingFields(formData, setErrors);
-        if (errors.length === 0) {
-          setErrors(["Invalid username and/or password."]);
-        }
-        console.log(error);
-      });
+    login(formData).catch((error) => {
+      catchMissingFields(formData, setErrors);
+      if (errors.length === 0) {
+        setErrors(["Invalid username and/or password."]);
+      }
+      console.log(error);
+    });
     e.preventDefault();
   };
 
@@ -65,6 +64,7 @@ export default function LoginPage() {
           onChange={handleChange}
           label="Username"
           type="text"
+          name="username"
           key="Username"
         />
         <FormField
@@ -72,7 +72,8 @@ export default function LoginPage() {
           onChange={handleChange}
           type="password"
           label="Password"
-          key="Password "
+          name="password"
+          key="Password"
         />
         <Button variant="contained" color="primary" onClick={submitForm}>
           Log In
